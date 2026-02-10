@@ -1,0 +1,49 @@
+---
+title: "Environment variables"
+description: "Reference required and optional environment variables for frontend and engine."
+---
+
+## Core variables
+
+| Variable | Required | Used by | Purpose |
+| --- | --- | --- | --- |
+| `SUPABASE_URL` | Yes | Engine | Supabase project URL for service-role operations |
+| `SUPABASE_SERVICE_KEY` | Yes | Engine | Service role key for privileged database and storage access |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Frontend | Browser/server Supabase URL for user-scoped operations |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Frontend | Anon key for app auth and RLS-scoped queries |
+| `OPENAI_API_KEY` | Yes | Engine | OpenAI API authentication |
+| `WEBHOOK_SECRET` | Recommended | Frontend + Engine | Shared secret for upload processing webhook requests |
+| `PORT` | Optional | Engine | Engine port, default `3001` |
+| `ENGINE_URL` | Optional | Frontend | Engine base URL for webhook trigger calls, default `http://engine:3001` |
+
+## LLM and analysis tuning
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `OPENAI_MODEL` | `gpt-4o` | Structured report generation model |
+| `OPENAI_MAX_TOKENS` | `16384` | Max tokens per LLM completion |
+| `LLM_SUMMARY_TIMEOUT_MS` | `120000` | Final summary generation timeout |
+| `LLM_JOIN_TIMEOUT_MS` | code-defined | Join/enrichment LLM timeout |
+| `MAX_FINDINGS_TEXT_CHARS` | `60000` | Truncation cap before LLM report generation |
+
+## CVE enrichment tuning
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `NVD_API_KEY` | none | Optional higher NVD API throughput |
+| `MAX_CVE_ID_LOOKUPS` | `50` | Cap on scanner-extracted CVE ID lookups |
+
+## Example
+
+```bash
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o
+OPENAI_MAX_TOKENS=16384
+WEBHOOK_SECRET=your-secret
+ENGINE_URL=http://engine:3001
+PORT=3001
+```

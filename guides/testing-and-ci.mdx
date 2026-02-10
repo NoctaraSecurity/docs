@@ -1,0 +1,52 @@
+---
+title: "Testing and CI"
+description: "Run quality checks locally and understand CI workflow behavior."
+---
+
+## Package-level test commands
+
+### Frontend
+
+```bash
+cd frontend
+npm run lint
+npm run test
+npm run test:coverage
+npm run build
+```
+
+### Engine
+
+```bash
+cd engine
+npm run lint
+npm run test
+npm run test:coverage
+npm run build
+```
+
+## Local CI runner
+
+From repo root:
+
+```bash
+node scripts/ci.js
+```
+
+This mirrors CI phases:
+
+1. Lint
+2. Test
+3. Build
+
+## GitHub Actions pipeline
+
+Workflow file: `.github/workflows/ci.yml`
+
+Matrix jobs run for `frontend` and `engine`:
+
+- lint
+- test
+- build
+
+Build job runs after lint and test succeed.

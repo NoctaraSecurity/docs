@@ -1,97 +1,34 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Noctara overview"
+description: "Understand Noctara, its architecture, and where to start."
 ---
 
-## Setting up
+Noctara is an AI-assisted security analysis platform. You upload scanner output, and Noctara produces structured findings, CVE enrichment, risk scoring, and export-ready reports.
 
-Get your documentation site up and running in minutes.
+## What you can do
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+- Upload security artifacts (`.txt`, `.xml`, `.log`, `.nmap`, `.json`) up to 50 MB each.
+- Process files through a workflow that detects tool type, extracts findings, enriches with CVE and EPSS, and generates a structured report.
+- Manage projects by company context so reports are grounded in business and infrastructure details.
+- Use token billing with redemption codes and admin controls.
+- Export reports as PDF, DOCX, or Markdown.
 
-## Make it yours
+## Core workflow
 
-Design a docs site that looks great and empowers your users.
+1. You upload a file in a project.
+2. Noctara computes token cost (`1 token = 2,500 characters`) and waits for confirmation.
+3. After confirmation, Noctara calls the engine webhook.
+4. The engine runs the LangGraph pipeline and writes `report_blocks`.
+5. The UI updates in real time through Supabase Realtime.
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+## System components
 
-## Create beautiful pages
+- `frontend/`: Next.js 16 app for auth, dashboard, projects, tokens, admin, and exports.
+- `engine/`: Node.js service that handles webhook processing and report generation.
+- `supabase/`: SQL migrations for schema, RLS, storage, token billing, and company context.
 
-Everything you need to create world-class documentation.
+## Start here
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+- If you are setting up a fresh environment, start with `/guides/quickstart`.
+- If Supabase is not configured yet, go to `/guides/supabase-setup`.
+- If you want implementation internals, go to `/architecture/system-overview`.

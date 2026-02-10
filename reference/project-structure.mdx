@@ -1,0 +1,37 @@
+---
+title: "Project structure"
+description: "Understand repository layout and major code ownership boundaries."
+---
+
+## Top-level layout
+
+```text
+noctara/
+├── frontend/                # Next.js app
+├── engine/                  # Express + LangGraph processing service
+├── supabase/                # SQL migrations and setup notes
+├── scripts/                 # Local CI helpers
+├── docker-compose.yml       # Local orchestration
+├── env.template             # Environment variable template
+└── README.md
+```
+
+## Frontend highlights
+
+- `src/app/` routes, actions, and API handlers
+- `src/components/` UI and domain components
+- `src/lib/export/` report export pipeline
+- `src/types/` shared domain types
+
+## Engine highlights
+
+- `src/index.ts` Express entrypoint
+- `src/workflows/` LangGraph graph and nodes
+- `src/services/` enrichment and billing services
+- `src/utils/` parsing, schema, OpenAI client, Supabase access
+- `src/__tests__/` unit and workflow tests
+
+## Supabase highlights
+
+- `migrations/001...013` cumulative schema and policy evolution
+- storage buckets: `log-files`, `company-assets`

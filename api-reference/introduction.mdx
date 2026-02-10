@@ -1,33 +1,25 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API introduction"
+description: "Reference externally callable HTTP endpoints in Noctara."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+Noctara exposes a small set of HTTP endpoints across engine and frontend runtime.
 
-## Welcome
+## Endpoint summary
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+| Endpoint | Runtime | Purpose |
+| --- | --- | --- |
+| `GET /health` | Engine | Health probe |
+| `POST /api/process-file` | Engine | Upload processing webhook |
+| `GET /api/reports/export/[projectId]?format=...` | Frontend | Report export as file download |
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+## Authentication model
 
-## Authentication
+- Engine webhook endpoint validates `X-Webhook-Secret` when configured.
+- Export endpoint requires authenticated user session and RLS-compliant project access.
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+## Related pages
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+- `/api-reference/engine-health`
+- `/api-reference/process-file-webhook`
+- `/api-reference/report-export-endpoint`

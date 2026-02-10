@@ -1,0 +1,33 @@
+---
+title: "Authentication"
+description: "Sign in flow, profile behavior, and route access model."
+---
+
+Noctara uses Supabase Auth for sign-in and session management.
+
+## Auth routes
+
+- `/auth`: sign in and sign up page
+- Protected pages redirect to `/auth` if no session
+
+Protected pages include:
+
+- `/dashboard`
+- `/project/[id]`
+- `/settings/account`
+- `/settings/tokens`
+- `/admin/codes` (admin only)
+
+## Profile model
+
+Noctara stores app-specific fields in `profiles`:
+
+- `token_balance`
+- `is_admin`
+- `company_name`
+
+The frontend `AuthContext` subscribes to profile updates so token balance and admin state refresh without a full reload.
+
+## Admin authorization
+
+Admin routes check `profiles.is_admin = true` before rendering admin features.

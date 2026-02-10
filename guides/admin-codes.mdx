@@ -1,0 +1,36 @@
+---
+title: "Admin redemption codes"
+description: "Create, activate, and retire token redemption codes."
+---
+
+Admin code management lives at `/admin/codes`.
+
+## Access control
+
+Only users with `profiles.is_admin = true` can access this route and mutate code records.
+
+## What admins can do
+
+- Create code with token amount
+- Set max redemptions (optional)
+- Set expiration in days (optional)
+- Toggle active/inactive state
+- Delete code
+
+## User redemption flow
+
+Users redeem codes from `/settings/tokens`.
+
+Validation checks include:
+
+- code exists
+- `is_active = true`
+- not expired
+- below max redemptions
+- user has not redeemed that code before
+
+On success:
+
+- Row is inserted in `code_redemptions`
+- `grant_tokens(...)` RPC credits balance
+- redemption count is incremented by trigger

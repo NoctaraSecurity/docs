@@ -1,0 +1,51 @@
+---
+title: "Uploads and tokens"
+description: "Understand file intake, token confirmation, processing statuses, and refunds."
+---
+
+Noctara enforces a token confirmation flow before engine processing starts.
+
+## Upload constraints
+
+The uploader accepts:
+
+- Extensions: `.txt`, `.xml`, `.log`, `.nmap`, `.json`
+- Max size: 50 MB per file
+
+## Token cost
+
+Token cost is calculated from file length:
+
+- `cost = ceil(characters / 2500)`
+- Minimum `1` token
+
+## Confirmation flow
+
+1. Upload record is created as `PENDING` with `awaiting_confirmation = true`.
+2. UI shows confirmation dialog with cost and current balance.
+3. On confirm:
+- `deduct_tokens(...)` RPC runs
+- Upload moves to `PROCESSING`
+- Engine webhook is triggered
+4. On cancel:
+- Upload row is deleted
+- File is removed from storage
+- No token deduction occurs
+
+## Failure handling and refunds
+
+If engine processing fails and `token_transaction_id` exists:
+
+- Engine calls `refund_tokens(...)`.
+- Upload status updates to `FAILED`.
+- `last_error` is written.
+
+## Status values
+
+`uploads.status` can be:
+
+- `PENDING`
+- `PROCESSING`
+- `COMPLETED`
+- `FAILED`
+- `INCOMPLETE`

@@ -1,0 +1,60 @@
+---
+title: "Engine workflow"
+description: "Deep dive into the LangGraph processing pipeline."
+---
+
+The engine runs an Express service and a LangGraph workflow.
+
+## Engine endpoints
+
+- `GET /health`
+- `POST /api/process-file`
+
+The process endpoint validates webhook secret, fetches upload state, downloads file content, and runs `mainGraph`.
+
+## Workflow graph
+
+Main graph definition: `engine/src/workflows/mainGraph.ts`
+
+Stages:
+
+1. `identifyFileType`
+2. `extractContext` (for selected tools)
+3. specialist node by tool
+4. `validateExtraction`
+5. optional `reflectOnExtraction` retry loop
+6. `enrichWithCVEs`
+7. `finalizeReport`
+8. `joinFinalReport`
+
+## Supported routed types
+
+- `nmap`
+- `nuclei`
+- `burp`
+- `testssl`
+- `masscan`
+- `nikto`
+- `zap`
+- `gobuster`
+- `sqlmap`
+- `openvas`
+- `nessus`
+- `compliance_doc`
+- `unknown` (stops with error)
+
+## Persistence behavior
+
+After successful workflow completion, engine:
+
+1. maps state to report block payload
+2. inserts into `report_blocks`
+3. marks upload `COMPLETED`
+4. logs project activities
+
+On failure, engine:
+
+1. attempts token refund when transaction exists
+2. marks upload `FAILED`
+3. records `last_error`
+4. logs failed activity

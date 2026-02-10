@@ -1,0 +1,32 @@
+---
+title: "System overview"
+description: "Understand how frontend, engine, and Supabase work together."
+---
+
+Noctara uses a split architecture:
+
+- `frontend` for UI and server actions
+- `engine` for webhook-driven analysis
+- Supabase for auth, database, storage, and realtime
+
+## Request flow
+
+1. You upload a file in the frontend.
+2. Frontend writes an `uploads` row and storage object.
+3. You confirm token deduction.
+4. Frontend triggers `POST /api/process-file` on engine.
+5. Engine downloads file, runs the workflow, stores a `report_block`, and updates upload status.
+6. Frontend receives realtime updates and renders results.
+
+## Key runtime contracts
+
+- Upload payload contract is `{"record": UploadRecord}`.
+- Engine status model is centered on `uploads.status`.
+- Report render contract is centered on `report_blocks.structured_summary`.
+
+## External dependencies
+
+- OpenAI for structured report generation
+- NVD for CVE data
+- FIRST EPSS for exploitation probability
+- CISA KEV feed (client exists for active exploitation context)

@@ -1,0 +1,82 @@
+---
+title: "Quickstart"
+description: "Set up Noctara with Docker, Supabase, and OpenAI."
+---
+
+Use this path when you want Noctara running locally as fast as possible.
+
+## Prerequisites
+
+- Docker Desktop with Docker Compose
+- A Supabase project
+- An OpenAI API key
+- `ngrok` for local webhook testing
+
+## 1. Clone and enter the repository
+
+```bash
+git clone <your-noctara-repo-url>
+cd noctara
+```
+
+## 2. Create environment file
+
+```bash
+cp env.template .env.dev
+```
+
+Populate `.env.dev`:
+
+```bash
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o
+OPENAI_MAX_TOKENS=16384
+WEBHOOK_SECRET=your-random-secret
+PORT=3001
+```
+
+## 3. Apply Supabase migrations
+
+Run SQL files in order from `supabase/migrations/001_initial_schema.sql` through `supabase/migrations/013_add_company_to_uploads.sql`.
+
+Details: `/guides/supabase-setup`
+
+## 4. Start local services
+
+```bash
+docker-compose --env-file .env.dev up --build
+```
+
+This starts:
+
+- Frontend at `http://localhost:3000`
+- Engine at `http://localhost:3001`
+
+## 5. Configure webhook
+
+Expose the engine with ngrok:
+
+```bash
+ngrok http 3001
+```
+
+Configure a Supabase Database Webhook for `uploads` `INSERT` to:
+
+`https://<ngrok-id>.ngrok-free.app/api/process-file`
+
+Use header:
+
+`X-Webhook-Secret: <WEBHOOK_SECRET>`
+
+Details: `/guides/webhook-setup`
+
+## 6. Validate the stack
+
+- Open `http://localhost:3000`
+- Create an account and a project
+- Upload a supported file
+- Confirm token spend
+- Verify report appears under the Report tab
