@@ -1,0 +1,38 @@
+---
+title: "GET /api/reports/export/[projectId]"
+description: "Export a project's report data as PDF, DOCX, or Markdown."
+---
+
+## Purpose
+
+Generate a downloadable report for a project.
+
+## Query parameters
+
+| Param | Required | Values |
+| --- | --- | --- |
+| `format` | Yes | `pdf`, `docx`, `md` |
+
+## Example
+
+```bash
+curl -L "http://localhost:3000/api/reports/export/<projectId>?format=pdf" \
+  -o report.pdf
+```
+
+You must call this with an authenticated session cookie in normal runtime.
+
+## Success response
+
+- Status `200`
+- Binary response body
+- Headers include:
+  - `Content-Type`
+  - `Content-Disposition: attachment; filename="..."`
+
+## Error responses
+
+- `400`: invalid or missing format
+- `401`: unauthenticated
+- `404`: project not found or no completed reports
+- `500`: export generation failure

@@ -1,0 +1,35 @@
+---
+title: "Frontend architecture"
+description: "Review route structure, server actions, and realtime behavior."
+---
+
+Noctara frontend is a Next.js 16 App Router application.
+
+## Routes
+
+- `/` landing page
+- `/auth` sign in / sign up
+- `/dashboard` projects grouped by company
+- `/project/[id]` workspace with `General`, `Evidence`, `Report` tabs
+- `/settings/account` account profile
+- `/settings/tokens` token balance, redemption, history
+- `/admin/codes` admin code management
+- `/api/reports/export/[projectId]` report export endpoint
+
+## Server action domains
+
+- `app/actions/uploads.ts`: upload and retry operations
+- `app/actions/tokens.ts`: token balance, deduction, redemption, cancellation
+- `app/actions/projects.ts`: create, rename, regroup, delete, stats, activities
+- `app/actions/companies.ts`: company CRUD and file asset handling
+- `app/actions/admin.ts`: admin redemption code management
+
+## Realtime UX model
+
+Client components subscribe to Supabase channels for:
+
+- `uploads` inserts/updates/deletes
+- `report_blocks` inserts
+- `profiles` updates (token balance and admin flag)
+
+UI also uses targeted polling for active uploads in `PENDING` and `PROCESSING` states.

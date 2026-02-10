@@ -1,0 +1,44 @@
+---
+title: "RLS and storage policies"
+description: "Understand access control for database rows and storage objects."
+---
+
+Noctara relies on Supabase Row Level Security for tenant isolation.
+
+## RLS model
+
+- User-facing frontend queries run with anon key and session JWT.
+- Access is scoped to `auth.uid()` ownership policies.
+- Engine uses service role key for controlled privileged writes.
+
+## Example access rules
+
+- Users can read/update their own `profiles` rows.
+- Users can CRUD only their own `projects`.
+- Users can read/create/update/delete `uploads` only for their own projects.
+- Users can read `report_blocks` only through project ownership join.
+- Admin-only policies guard `redemption_codes` CRUD.
+
+## Storage model
+
+### `log-files` bucket
+
+Path convention:
+
+`{user_id}/{project_id}/{filename}`
+
+Policies allow users to act only within folders prefixed by their own user ID. Service role has full access for engine downloads.
+
+### `company-assets` bucket
+
+Path convention:
+
+`{user_id}/{company_id}/{folder}/{filename}`
+
+Migration creates the private bucket. Storage policies are documented for dashboard configuration in migration notes.
+
+## Security guidance
+
+- Do not use service role credentials in frontend code.
+- Keep webhook secret synchronized between Supabase and engine runtime.
+- Treat signed URLs as short-lived artifacts for controlled export rendering.

@@ -1,0 +1,41 @@
+---
+title: "Supported file types"
+description: "See what scanner outputs Noctara can detect and process."
+---
+
+Noctara identifies scanner outputs by signature matching in `engine/src/workflows/nodes/router.ts`.
+
+## Detected tool categories
+
+- Nmap
+- Nikto
+- Nuclei
+- Burp Suite
+- Masscan
+- testssl.sh
+- Gobuster
+- SQLMap
+- OWASP ZAP
+- OpenVAS
+- Nessus
+- UK compliance documents
+
+If signatures do not produce a confident match, file type is set to `unknown` and processing fails safely.
+
+## Deterministic parsing support
+
+Noctara uses deterministic parsers before or alongside LLM extraction for selected formats:
+
+- Nmap XML
+- Nuclei JSON lines
+- Burp XML
+- testssl text output
+
+Deterministic parsers live in `engine/src/utils/deterministicParsers.ts`.
+
+## Upload-level constraints
+
+Frontend uploader accepts:
+
+- Extensions: `.txt`, `.xml`, `.log`, `.nmap`, `.json`
+- Maximum size: `50 MB`

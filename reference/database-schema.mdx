@@ -1,0 +1,53 @@
+---
+title: "Database schema"
+description: "Reference core tables, relationships, and function-driven workflows."
+---
+
+The schema is defined by migrations in `supabase/migrations/`.
+
+## Core entities
+
+| Table | Purpose |
+| --- | --- |
+| `profiles` | User profile extension for Supabase auth users |
+| `projects` | User-owned analysis projects |
+| `uploads` | Uploaded artifacts and processing state |
+| `report_blocks` | Structured reports generated per upload |
+| `project_groups` | Optional project organization layer |
+| `project_activities` | Activity/audit timeline entries |
+| `companies` | Company context captured by wizard |
+| `cve_cache` | Cached CVE lookup results |
+
+## Token economy tables
+
+| Table | Purpose |
+| --- | --- |
+| `token_transactions` | Immutable token movement history |
+| `redemption_codes` | Admin-managed token code inventory |
+| `code_redemptions` | Which users redeemed which codes |
+
+## Notable enums
+
+- `upload_status`: `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `INCOMPLETE`
+- `activity_type`: upload/analysis/report lifecycle events
+- `transaction_type` and `transaction_status`
+- company wizard enums (`industry_type`, `company_size`, `risk_appetite`, and others)
+
+## Key relationships
+
+- `projects.owner_id -> profiles.id`
+- `uploads.project_id -> projects.id`
+- `report_blocks.upload_id -> uploads.id`
+- `projects.company_id -> companies.id`
+- `uploads.company_id -> companies.id`
+
+`uploads.company_id` is denormalized context so historical uploads keep their company context even if project assignment changes later.
+
+## Database functions used by app
+
+- `deduct_tokens(...)`
+- `refund_tokens(...)`
+- `grant_tokens(...)`
+- `calculate_token_cost(...)`
+
+These functions enforce atomic balance changes and transaction logging.

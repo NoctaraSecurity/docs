@@ -1,0 +1,54 @@
+---
+title: "Webhook setup"
+description: "Configure Supabase to call the engine when uploads are created."
+---
+
+Noctara processing starts when Supabase sends an `uploads` insert payload to the engine.
+
+## 1. Expose your engine in local development
+
+```bash
+ngrok http 3001
+```
+
+Copy the HTTPS URL from ngrok.
+
+## 2. Create database webhook in Supabase
+
+In Supabase Dashboard:
+
+1. Open **Database** > **Webhooks**.
+2. Create a webhook for table `uploads`.
+3. Select `INSERT` event.
+4. Set URL to `<your-public-engine-url>/api/process-file`.
+5. Add header `X-Webhook-Secret` with your `WEBHOOK_SECRET` value.
+
+## 3. Use request body
+
+```json
+{
+  "record": {
+    "id": "{{ $json.id }}",
+    "project_id": "{{ $json.project_id }}",
+    "file_path": "{{ $json.file_path }}",
+    "file_name": "{{ $json.file_name }}",
+    "status": "{{ $json.status }}"
+  }
+}
+```
+
+## 4. Verify engine-side secret
+
+The engine reads `WEBHOOK_SECRET` and compares it to `x-webhook-secret` request header.
+
+If the secret mismatches, the engine responds `401`.
+
+## 5. Test quickly
+
+Use a health check:
+
+```bash
+curl http://localhost:3001/health
+```
+
+Then upload a file in the UI and verify engine logs show the upload ID.

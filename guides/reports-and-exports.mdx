@@ -1,0 +1,43 @@
+---
+title: "Reports and exports"
+description: "Read generated reports, track severity, and export deliverables."
+---
+
+## Report generation output
+
+When processing completes, the engine writes `report_blocks` containing:
+
+- `tool_type`
+- `structured_summary` (JSON report object)
+- `raw_findings` (parsed entities)
+- `severity_score`
+- CVE summary fields (`total_cve_count`, `highest_cvss_score`, and counts)
+
+## Report tab behavior
+
+The Report tab:
+
+- Subscribes to `report_blocks` realtime inserts.
+- Groups reports by upload artifact.
+- Renders tool-specific blocks through a report registry.
+
+## Export formats
+
+You can export project reports as:
+
+- PDF
+- DOCX
+- Markdown
+
+The export pipeline:
+
+1. Loads project, uploads, report blocks, and optional company context.
+2. Curates findings (dedupe, CVE merge, attack chain context).
+3. Builds a unified report section model.
+4. Uses format-specific builders to produce file output.
+
+## Export endpoint
+
+`GET /api/reports/export/[projectId]?format=pdf|docx|md`
+
+Details: `/api-reference/report-export-endpoint`

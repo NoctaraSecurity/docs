@@ -1,0 +1,62 @@
+---
+title: "POST /api/process-file"
+description: "Webhook endpoint that triggers file processing in the engine."
+---
+
+## Purpose
+
+This endpoint starts the LangGraph analysis pipeline for an upload record.
+
+## Headers
+
+| Header | Required | Description |
+| --- | --- | --- |
+| `Content-Type: application/json` | Yes | JSON payload |
+| `X-Webhook-Secret` | Recommended | Must match engine `WEBHOOK_SECRET` when set |
+
+## Request body
+
+```json
+{
+  "record": {
+    "id": "f2f0d2be-...",
+    "project_id": "bf8c2f0a-...",
+    "file_path": "<user-id>/<project-id>/1730000000000_scan.xml",
+    "file_name": "scan.xml",
+    "status": "PENDING"
+  }
+}
+```
+
+## Success response
+
+```json
+{
+  "status": "success",
+  "uploadId": "f2f0d2be-...",
+  "toolType": "NMAP",
+  "findingsCount": 18,
+  "severityScore": 7
+}
+```
+
+## Other responses
+
+- `401`: invalid webhook secret
+- `400`: missing/invalid record fields
+- `404`: upload no longer exists
+- `202`: upload still awaiting token confirmation
+- `500`: processing failed
+
+## Side effects
+
+On success:
+
+- inserts into `report_blocks`
+- updates `uploads.status` to `COMPLETED`
+
+On failure:
+
+- optionally refunds tokens if a debit transaction exists
+- updates `uploads.status` to `FAILED`
+- stores `uploads.last_error`

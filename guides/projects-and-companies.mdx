@@ -1,0 +1,45 @@
+---
+title: "Projects and companies"
+description: "Create projects, assign company context, and manage project settings."
+---
+
+## Dashboard model
+
+The dashboard groups your projects by company.
+
+- Projects with `company_id` appear under that company.
+- Projects with `NULL company_id` appear as unassigned.
+
+## Create a project
+
+Use **Create project** from `/dashboard`.
+
+You can:
+
+- Create an unassigned project.
+- Attach to an existing company.
+- Launch the 7-step company wizard and create a company inline.
+
+## Company wizard
+
+The wizard captures structured context across 7 steps:
+
+1. Basic info
+2. Business context
+3. Infrastructure
+4. Security posture
+5. Risk and operations
+6. Evidence files
+7. Review
+
+This data is stored in `companies` and linked through `projects.company_id`.
+
+## Project settings
+
+From project sidebar settings:
+
+- Rename project
+- Change group
+- Delete project
+
+Deletion cascades to related `uploads` and `report_blocks`.

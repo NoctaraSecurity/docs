@@ -1,0 +1,27 @@
+---
+title: "GET /health"
+description: "Engine health check endpoint."
+---
+
+## Purpose
+
+Check engine process availability.
+
+## Request
+
+```bash
+curl http://localhost:3001/health
+```
+
+## Response
+
+```json
+{
+  "status": "ok",
+  "service": "noctara-engine"
+}
+```
+
+## Status codes
+
+- `200` when engine is running

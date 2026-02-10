@@ -1,0 +1,45 @@
+---
+title: "Troubleshooting"
+description: "Resolve common setup and runtime issues in Noctara."
+---
+
+## Upload never starts processing
+
+Check these first:
+
+- Upload row is `awaiting_confirmation = true`
+- User confirmed token spend in UI
+- Supabase webhook is configured for `uploads` `INSERT`
+- Engine URL is reachable from Supabase
+- `X-Webhook-Secret` matches `WEBHOOK_SECRET`
+
+## Upload fails immediately
+
+Inspect:
+
+- Engine logs for workflow/parsing errors
+- `uploads.last_error` value
+- Whether uploaded file format matches supported tool signatures
+
+## Token balance issues
+
+- Verify `profiles.token_balance`
+- Confirm `token_transactions` contains debit and optional refund entries
+- Ensure `deduct_tokens` and `refund_tokens` RPCs exist (migration 007)
+
+## Missing realtime updates
+
+- Confirm replication is enabled for `uploads` and `report_blocks`
+- Check browser console for Supabase channel errors
+
+## CVE enrichment appears empty
+
+- Verify service and version extraction for entities
+- Check NVD API reachability
+- Review `cve_cache` for cached results and expiry behavior
+
+## Export endpoint returns no data
+
+- Confirm project has completed uploads with `report_blocks`
+- Ensure caller is authenticated and has project access
+- Verify format query param is one of `pdf`, `docx`, `md`
